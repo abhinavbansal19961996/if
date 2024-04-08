@@ -2,6 +2,26 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 
 import * as YAML from 'js-yaml';
+import axios from 'axios';
+
+export const openYamlUrlAsObject = async <T>(url: string): Promise<T> => {
+  try {
+    // Make a GET request to fetch the YAML file from the URL
+    const response = await axios.get(url);
+
+    // Extract the YAML content from the response
+    const yamlContent = response.data;
+
+    // Parse the YAML content into an object
+    const yamlObject = YAML.load(yamlContent);
+
+    return yamlObject as T;
+  } catch (error) {
+    // Handle any errors that may occur during the process
+    console.error('Error fetching or parsing YAML file:', error);
+    throw error;
+  }
+};
 
 /**
  * Reads and parses `yaml` file to object.

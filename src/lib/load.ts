@@ -1,5 +1,6 @@
 import {validateManifest} from '../util/validations';
 import {openYamlFileAsObject} from '../util/yaml';
+import {openYamlUrlAsObject} from '../util/yaml';
 import {readAndParseJson} from '../util/json';
 
 import {PARAMETERS} from '../config';
@@ -10,7 +11,13 @@ import {Parameters} from '../types/parameters';
  * Returns context, tree and parameters (either the default one, or from CLI).
  */
 export const load = async (inputPath: string, paramPath?: string) => {
-  const rawManifest = await openYamlFileAsObject<any>(inputPath);
+  let rawManifest = '';
+  if (inputPath.includes('http')) {
+    rawManifest = await openYamlUrlAsObject<any>(inputPath);
+  } else {
+    rawManifest = await openYamlFileAsObject<any>(inputPath);
+  }
+
   const {tree, ...context} = validateManifest(rawManifest);
   const parametersFromCli =
     paramPath &&

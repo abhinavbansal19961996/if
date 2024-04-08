@@ -36,7 +36,7 @@ const validateAndParseProcessArgs = () => {
 const prependFullFilePath = (filePath: string) => {
   const processRunningPath = process.cwd();
 
-  if (path.isAbsolute(filePath)) {
+  if (path.isAbsolute(filePath) || filePath.includes('http')) {
     return filePath;
   }
 
